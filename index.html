@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detektif Angka - Bongkar Miskonsepsi Nilai Tempat</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="stagelight"></div>
+
+<!-- ============ HEADER BAR (muncul saat bermain) ============ -->
+<header id="topbar" class="topbar hidden">
+  <div class="topbar-left">
+    <span class="topbar-icon">🔎</span>
+    <span class="topbar-title">DETEKTIF ANGKA</span>
+  </div>
+  <div class="topbar-right">
+
+    <button id="btnSound" class="sound-btn">
+        🔊
+    </button>
+
+    <div class="topbar-chip" id="levelChip">
+        Level 1
+    </div>
+
+    <div class="topbar-chip score-chip">
+        ⭐ <span id="topScore">0</span>
+    </div>
+
+</div>
+</header>
+
+<main class="app">
+
+  <!-- ============ 1. HALAMAN PEMBUKA ============ -->
+  <section id="screen-opening" class="screen active">
+    <div class="opening-card">
+      <div class="opening-badge">KASUS BARU DIBUKA</div>
+
+      <div class="detective-kid" aria-hidden="true">
+        <svg viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="110" cy="245" rx="70" ry="12" fill="#00000022"/>
+          <!-- legs -->
+          <rect x="82" y="175" width="20" height="55" rx="9" fill="#3D6FB4"/>
+          <rect x="118" y="175" width="20" height="55" rx="9" fill="#3D6FB4"/>
+          <rect x="78" y="222" width="30" height="14" rx="6" fill="#2B2250"/>
+          <rect x="112" y="222" width="30" height="14" rx="6" fill="#2B2250"/>
+          <!-- coat body -->
+          <path d="M60 110 Q110 90 160 110 L168 190 Q110 210 52 190 Z" fill="#FFD93D"/>
+          <path d="M96 112 L110 190 L124 112 Z" fill="#fff8e1"/>
+          <circle cx="110" cy="150" r="4" fill="#FF6B6B"/>
+          <circle cx="110" cy="168" r="4" fill="#FF6B6B"/>
+          <!-- arms -->
+          <path d="M60 118 Q35 140 40 175" stroke="#FFD93D" stroke-width="18" fill="none" stroke-linecap="round"/>
+          <path d="M160 118 Q188 132 182 100" stroke="#FFD93D" stroke-width="18" fill="none" stroke-linecap="round"/>
+          <!-- magnifier in hand -->
+          <circle cx="184" cy="88" r="20" fill="#ffffffcc" stroke="#2B2250" stroke-width="6"/>
+          <line x1="198" y1="102" x2="212" y2="116" stroke="#2B2250" stroke-width="8" stroke-linecap="round"/>
+          <!-- head -->
+          <circle cx="110" cy="70" r="42" fill="#FFDCB0"/>
+          <path d="M68 60 Q110 20 152 60 Q152 40 110 34 Q68 40 68 60Z" fill="#5B3A29"/>
+          <circle cx="94" cy="70" r="5" fill="#2B2250"/>
+          <circle cx="126" cy="70" r="5" fill="#2B2250"/>
+          <path d="M96 90 Q110 100 124 90" stroke="#2B2250" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="80" cy="80" r="7" fill="#FF9E9E" opacity="0.7"/>
+          <circle cx="140" cy="80" r="7" fill="#FF9E9E" opacity="0.7"/>
+          <!-- detective hat -->
+          <path d="M62 44 Q110 8 158 44 L158 52 Q110 34 62 52 Z" fill="#2B2250"/>
+          <rect x="80" y="40" width="60" height="12" rx="4" fill="#2B2250"/>
+        </svg>
+      </div>
+
+      <h1 class="opening-title">🔎 DETEKTIF ANGKA</h1>
+      <p class="opening-subtitle">Bongkar Miskonsepsi Nilai Tempat</p>
+      <p class="opening-desc">Bantu Detektif memecahkan kasus-kasus bilangan yang membingungkan! Selidiki setiap pernyataan, temukan kesalahannya, dan jadilah Detektif Nilai Tempat sejati.</p>
+
+      <div class="opening-buttons">
+
+    <button class="btn btn-primary btn-big" id="btnMulai">
+        🚀 MULAI
+    </button>
+
+    <button class="btn btn-info btn-big" id="btnInfo">
+        📘 INFORMASI MEDIA
+    </button>
+
+    <button class="btn btn-secondary btn-big" id="btnPetunjuk">
+        ❓ PETUNJUK
+    </button>
+
+</div>
+    </div>
+  </section>
+
+    <!-- ============ MODAL PETUNJUK ============ -->
+  <div id="modalPetunjuk" class="modal-overlay hidden">
+    <div class="modal-box">
+      <button class="modal-close" id="btnTutupPetunjuk">✕</button>
+      <h2>📖 Cara Bermain</h2>
+      <ol class="petunjuk-list">
+        <li>Kamu akan menjelajahi 3 level kasus, dari <b>Detektif Pemula</b> sampai <b>Detektif Ahli</b>.</li>
+        <li>Setiap kasus berisi pernyataan seorang saksi tentang sebuah bilangan.</li>
+        <li>Bacalah pernyataannya baik-baik, lalu tentukan pilihanmu: <b>BENAR</b> atau <b>SALAH</b>.</li>
+        <li>Tekan tombol <b>PERIKSA JAWABAN</b> untuk melihat hasilnya.</li>
+        <li>Perhatikan pembahasan nilai tempat setiap kali kamu selesai menjawab.</li>
+        <li>Kumpulkan skor dan bintang sebanyak-banyaknya untuk mendapatkan Sertifikat Detektif Nilai Tempat!</li>
+      </ol>
+      <button class="btn btn-primary btn-big" id="btnPetunjukSelesai">SIAP MENYELIDIKI!</button>
+    </div>
+  </div>
+
+  <!-- ============ MODAL INFORMASI ============ -->
+<div id="modalInfo" class="modal-overlay hidden">
+
+<div class="modal-box info-modal">
+
+<button class="modal-close" id="btnTutupInfo">✕</button>
+
+<h2>📘 INFORMASI MEDIA</h2>
+
+<div class="info-section">
+
+<h3>👤 Profil Pengembang</h3>
+
+<p><b>Nama</b> : Dewi Lestari</p>
+
+<p><b>NIM</b> : 2025015110</p>
+
+<p><b>Program Studi</b> : Pendidikan Guru Sekolah Dasar</p>
+
+<p><b>Fakultas</b> : Fakultas Keguruan dan Imu Pendidikan</p>
+
+<p><b>Universitas</b> : Universitas Sarjanawiyata Tamansiswa</p>
+
+<p><b>Mata Kuliah</b> : Pemecahan Masalah Pembelajaran Matematika</p>
+
+<p><b>Dosen Pengampu</b> : Nelly Rhosyida, S.Pd., M.Pd.</p>
+
+<hr>
+
+<h3>🎯 Capaian Pembelajaran</h3>
+
+<p>
+Peserta didik mampu memahami nilai tempat bilangan,
+menguraikan bilangan,
+serta menemukan miskonsepsi nilai tempat.
+</p>
+
+<hr>
+
+<h3>🎓 Tujuan Pembelajaran</h3>
+
+<ul>
+
+<li>Menentukan nilai tempat ratusan, puluhan, dan satuan.</li>
+
+<li>Menguraikan bilangan menjadi bentuk panjang.</li>
+
+<li>Menemukan miskonsepsi nilai tempat.</li>
+
+<li>Menjelaskan alasan matematis.</li>
+
+</ul>
+
+<hr>
+
+<h3>📚 Referensi</h3>
+
+<ol class="reference-list">
+
+<li>
+Kementerian Pendidikan Dasar dan Menengah. (2024).
+<b>Keputusan Kepala Badan Standar, Kurikulum, dan Asesmen Pendidikan Nomor 032/H/KR/2024 tentang Capaian Pembelajaran pada Pendidikan Anak Usia Dini, Jenjang Pendidikan Dasar, dan Jenjang Pendidikan Menengah pada Kurikulum Merdeka.</b>
+Jakarta: Kemendikdasmen.
+</li>
+
+<li>
+Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi. (2022).
+<b>Matematika untuk SD/MI Kelas III.</b>
+Jakarta: Pusat Perbukuan, BSKAP.
+</li>
+
+<li>
+Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi. (2022).
+<b>Buku Panduan Guru Matematika untuk SD/MI Kelas III.</b>
+Jakarta: Pusat Perbukuan, BSKAP.
+</li>
+
+<li>
+Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi. (2022).
+<b>Panduan Pembelajaran dan Asesmen Pendidikan Anak Usia Dini, Pendidikan Dasar, dan Pendidikan Menengah.</b>
+Jakarta: BSKAP.
+</li>
+
+<li>
+Direktorat Sekolah Dasar. (2022).
+<b>Panduan Implementasi Kurikulum Merdeka di Sekolah Dasar.</b>
+Jakarta: Direktorat Jenderal PAUD, Pendidikan Dasar, dan Pendidikan Menengah.
+</li>
+
+<li>
+Aulia, D. D., &amp; Yuhana, Y. (2024).
+<b>Miskonsepsi Siswa dalam Memahami Konsep Nilai Tempat Bilangan pada Pembelajaran Matematika Kelas IV SD.</b>
+<i>Pendas: Jurnal Ilmiah Pendidikan Dasar</i>, 9(1).
+https://doi.org/10.23969/jp.v9i1.11527
+</li>
+
+<li>
+Nabila, C., &amp; Pujiastuti, H. (2022).
+<b>Analisis Miskonsepsi Nilai Tempat Bilangan Dua Angka pada Siswa Sekolah Dasar.</b>
+<i>Jurnal Pendidikan Matematika dan Sains</i>, 10(2), 88–92.
+https://doi.org/10.21831/jpms.v10i2.41686
+</li>
+
+<li>
+Dewi, M. S. A. (2022).
+<b>Analisis Miskonsepsi Anak Sekolah Dasar dalam Memahami Konsep Nilai Tempat Bilangan Dua Angka pada Pembelajaran Matematika.</b>
+<i>Jurnal Pendidikan dan Konseling (JPDK)</i>, 4(5).
+https://doi.org/10.31004/jpdk.v4i5.6989
+</li>
+
+<li>
+Hijraningsih, S., Affandi, L. H., Hidayati, V. R., &amp; Nurmawanti, I. (2024).
+<b>Pengembangan Media Pembelajaran KONIT (Kotak Nilai Tempat) pada Mata Pelajaran Matematika Sekolah Dasar.</b>
+<i>Jurnal Pendidikan MIPA</i>, 14(4).
+https://doi.org/10.37630/jpm.v14i4.2094
+</li>
+
+<li>
+Rif'ah, N. I. (2023).
+<b>Pengembangan Konten Games Berbasis Website pada Materi Nilai Tempat Sekolah Dasar.</b>
+<i>Jurnal Penelitian Pendidikan Guru Sekolah Dasar</i>.
+</li>
+
+</ol>
+
+</div>
+
+</div>
+
+</div>
+
+  <!-- ============ 6. KARTU LEVEL (sebelum tiap level) ============ -->
+  <section id="screen-level-intro" class="screen">
+    <div class="level-card" id="levelIntroCard">
+      <div class="level-icon">🔎</div>
+      <div class="level-eyebrow" id="levelIntroEyebrow">LEVEL 1</div>
+      <h2 class="level-name" id="levelIntroName">Misi Detektif Pemula</h2>
+      <p class="level-materi" id="levelIntroMateri">Materi: Satuan dan Puluhan</p>
+      <div class="level-info-row">
+        <div class="level-info-chip" id="levelIntroCount">5 Kasus</div>
+        <div class="level-info-chip">🏅 Maks. 100 poin</div>
+      </div>
+      <button class="btn btn-primary btn-big" id="btnMulaiMisi">MULAI MISI 🔍</button>
+    </div>
+  </section>
+
+  <!-- ============ 3. KARTU KASUS / GAMEPLAY ============ -->
+  <section id="screen-game" class="screen">
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="caseProgressFill"></div></div>
+      <div class="progress-label"><span id="caseProgressLabel">Kasus 1 / 5</span></div>
+    </div>
+
+    <div class="case-card" id="caseCard">
+      <div class="case-tab">🔎 KASUS DETEKTIF #<span id="caseNumber">01</span></div>
+
+      <div class="witness-row">
+        <div class="witness-avatar" id="witnessAvatar">🧒</div>
+        <div class="witness-bubble">
+          <div class="witness-name" id="witnessName">Beni</div>
+          <div class="witness-claim" id="claimText">352 = 3 + 5 + 2</div>
+        </div>
+      </div>
+
+      <p class="claim-question">Benarkah pernyataan ini, Detektif?</p>
+
+      <div class="tf-buttons">
+        <button class="tf-btn tf-true" data-answer="benar">
+          <span class="tf-icon">✔️</span> BENAR
+        </button>
+        <button class="tf-btn tf-false" data-answer="salah">
+          <span class="tf-icon">✖️</span> SALAH
+        </button>
+      </div>
+
+      <button class="btn btn-primary btn-big btn-periksa" id="btnPeriksa" disabled>PERIKSA JAWABAN</button>
+
+      <!-- feedback -->
+      <div class="feedback-box hidden" id="feedbackBox">
+        <div class="feedback-headline" id="feedbackHeadline">Hebat! Kamu menemukan miskonsepsi.</div>
+        <div class="breakdown" id="breakdownBox">
+          <!-- filled by JS -->
+        </div>
+        <button class="btn btn-accent btn-big" id="btnLanjutKasus">LANJUT ➜</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RINGKASAN LEVEL ============ -->
+  <section id="screen-level-summary" class="screen">
+    <div class="summary-card">
+      <div class="summary-badge">🏁 MISI SELESAI</div>
+      <h2 id="summaryLevelName">Detektif Pemula</h2>
+      <div class="summary-score" id="summaryScoreText">80/100</div>
+      <div class="summary-stars" id="summaryStars">⭐⭐⭐⭐</div>
+      <p class="summary-detail" id="summaryDetail">Kamu menjawab 4 dari 5 kasus dengan benar!</p>
+      <button class="btn btn-primary btn-big" id="btnLanjutLevel">LANJUT KE LEVEL BERIKUTNYA ➜</button>
+    </div>
+  </section>
+
+  <!-- ============ HASIL BELAJAR ============ -->
+<section id="screen-result" class="screen">
+
+  <div class="result-card">
+
+    <div class="result-badge">
+      🎯 HASIL INVESTIGASI
+    </div>
+
+    <h2>Selamat!</h2>
+
+    <p>
+      Kamu telah menyelesaikan seluruh misi Detektif Angka.
+    </p>
+
+    <div class="result-grid">
+
+      <div class="result-item result-score-item">
+        <div class="result-number" id="resultScore">300</div>
+        <div class="result-label">Total Skor</div>
+      </div>
+
+      <div class="result-rank">
+
+  <div class="rank-title">
+    Predikat
+  </div>
+
+  <div id="resultRank" class="rank-badge">
+    🏆 DETEKTIF LEGENDARIS
+  </div>
+
+</div>
+
+      <div class="result-item">
+        <div class="result-number" id="resultCorrect">15</div>
+        <div class="result-label">Jawaban Benar</div>
+      </div>
+
+      <div class="result-item">
+        <div class="result-number" id="resultWrong">0</div>
+        <div class="result-label">Jawaban Salah</div>
+      </div>
+
+      <div class="result-item">
+        <div class="result-number" id="resultAccuracy">100%</div>
+        <div class="result-label">Akurasi</div>
+      </div>
+
+  </div>
+  <div class="result-chart">
+
+    <canvas id="resultChart"></canvas>
+
+  </div>
+
+  <button
+      class="btn btn-primary btn-big"
+      id="btnLihatSertifikat">
+
+      📜 LIHAT SERTIFIKAT
+
+    </button>
+
+  </div>
+
+</section>
+
+  <!-- ============ 7. SERTIFIKAT ============ -->
+  <section id="screen-certificate" class="screen">
+    <div class="cert-wrap">
+      <div class="cert-card" id="certCard">
+
+  <div class="cert-header">
+
+    <div class="cert-logo">
+        <img
+    src="images/logo-ust.png"
+    id="logoUST"
+    crossorigin="anonymous"
+    alt="Logo UST">
+    </div>
+
+    <div class="cert-univ">
+        UNIVERSITAS SARJANAWIYATA TAMANSISWA
+    </div>
+
+    <div class="cert-fkip">
+        Fakultas Keguruan dan Ilmu Pendidikan
+    </div>
+
+    <div class="cert-prodi">
+        Program Studi Pendidikan Guru Sekolah Dasar
+    </div>
+
+</div>
+
+  <div class="cert-line"></div>
+
+  <div class="cert-seal">
+    🏅
+  </div>
+
+  <div class="cert-piagam">
+    PIAGAM PENGHARGAAN
+  </div>
+
+  <div class="cert-media">
+    DETEKTIF ANGKA
+  </div>
+
+  <div class="cert-subtitle">
+    Bongkar Miskonsepsi Nilai Tempat
+  </div>
+
+  <p class="cert-title">
+    Diberikan kepada
+  </p>
+
+  <div class="cert-name" id="certName">
+    Nama Peserta
+  </div>
+
+  <p class="cert-desc">
+
+    Telah berhasil menyelesaikan seluruh investigasi
+    miskonsepsi nilai tempat bilangan melalui
+    media pembelajaran interaktif
+    <b>Detektif Angka</b>.
+
+  </p>
+  <div class="cert-media-info">
+
+    <div class="media-item">
+        <strong>Media</strong><br>
+        Detektif Angka
+    </div>
+
+    <div class="media-item">
+        <strong>Materi</strong><br>
+        Nilai Tempat Bilangan
+    </div>
+
+    <div class="media-item">
+        <strong>Fase/Kelas</strong><br>
+        Fase B (Kelas III SD)
+    </div>
+
+</div>
+
+<div class="cert-score-row">
+
+    <div class="cert-score-item">
+
+      <div class="cert-score-num" id="certScore">
+        300
+      </div>
+
+      <div class="cert-score-label">
+        Total Skor
+      </div>
+
+    </div>
+
+<div class="cert-score-item">
+
+    <div class="cert-score-num cert-stars" id="certStars">
+        ⭐⭐⭐⭐⭐
+    </div>
+
+    <div class="cert-score-label">
+        Bintang
+    </div>
+
+  </div>
+
+</div>
+
+  <div class="cert-info">
+
+    <div class="cert-info-box">
+
+      <strong>Tanggal</strong>
+
+      <div id="certDate">
+        -
+      </div>
+
+    </div>
+
+    <div class="cert-info-box">
+
+      <strong>No. Sertifikat</strong>
+
+      <div id="certNumber">
+        DA-2026-0001
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="cert-sign">
+
+    <div class="signature-space"></div>
+
+    <strong>Dewi Lestari</strong>
+
+    <div>
+      Pengembang Media
+    </div>
+
+  </div>
+
+</div>
+
+      <div class="cert-form">
+
+    <label for="inputNama">
+        Tuliskan nama peserta:
+    </label>
+
+    <input
+        type="text"
+        id="inputNama"
+        placeholder="Masukkan nama..."
+        maxlength="30">
+
+<div id="namaError" class="input-error hidden">
+    ⚠ Nama peserta minimal 3 huruf.
+</div>
+
+    <button
+        class="btn btn-primary btn-big"
+        id="btnCetakSertifikat">
+        🎉 TAMPILKAN SERTIFIKAT
+    </button>
+
+    <button
+        class="btn btn-success btn-big"
+        id="btnDownloadPDF">
+        📄 DOWNLOAD PDF
+    </button>
+
+    <button
+        class="btn btn-secondary btn-big"
+        id="btnUlangi">
+        🔁 MAIN LAGI
+    </button>
+
+</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="script.js"></script>
+
+<footer class="app-footer">
+    <strong>Detektif Angka v1.0</strong><br>
+    Media Pembelajaran Interaktif Nilai Tempat Bilangan<br>
+    © 2026 Dewi Lestari
+</footer>
+
+</body>
+</html>
